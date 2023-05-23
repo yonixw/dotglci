@@ -1,8 +1,5 @@
 # gitlab Reconfigured!
 
-PASS=PasswordStrong321!
-TOKEN=glpat-yFVkNWWyEP124XBgT-5x
-
 curl --fail --silent --header "Private-Token: ${PASS}" "http://localhost/api/v4/projects/${PROJECT}"
 
 
