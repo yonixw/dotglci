@@ -11,6 +11,7 @@ services:
   runner1:
     image: gitlab/gitlab-runner:ubuntu
     volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
       - runner1cfg:/etc/gitlab-runner/
     networks:
       - gitlab-local-ci
@@ -20,6 +21,7 @@ services:
   runner2:
     image: gitlab/gitlab-runner:ubuntu
     volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
       - runner2cfg:/etc/gitlab-runner/
     networks:
       - gitlab-local-ci
