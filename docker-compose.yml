@@ -32,6 +32,7 @@ services:
     image: gitlab/gitlab-ce:latest
     restart: always
     hostname: gitlab
+    container_name: gitlab
     environment:
       GITLAB_ROOT_PASSWORD: TestPasswordDontUse!
       GITLAB_OMNIBUS_CONFIG: |

@@ -19,7 +19,7 @@ logx () {
 
 # todo - script for push and get latests run->jobs->logs
 
-DEV_ROOT_PASS=TestStrongTextDontUse!
+DEV_ROOT_PASS=root
 DEV_ROOT_ACC=token-string-ABYZ000
 
 logx "Starting the docker... (~1.4GB pull->3GB unzip)"
@@ -55,6 +55,7 @@ logx "Registering workers... 1/2"
         --executor "docker" \
         --url "http://gitlab:80/" \
         --docker-image "ubuntu" \
+        --docker-links "gitlab" \
         --token "$RUNNER_TOKEN"
 
 
@@ -71,6 +72,7 @@ logx "Registering workers... 2/2"
         --executor "docker" \
         --url "http://gitlab:80/" \
         --docker-image "ubuntu" \
+        --docker-links "gitlab" \
         --token "$RUNNER_TOKEN2"
 
 logx "Starting workers..."
