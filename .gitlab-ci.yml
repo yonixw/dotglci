@@ -11,7 +11,16 @@ job1:
     expire_in: 24 hour # default is 30days
     paths:
       - ./artifacts/*
-      - build.env
+    reports:
+      dotenv: build.env
+
+job1.5:
+  stage: build
+  script:
+    - echo ok $(date)
+  needs:
+    - job: "job1"
+      artifacts: false
 
 job2:
   stage: build
@@ -22,6 +31,8 @@ job2:
     expire_in: 24 hour # default is 30days
     paths:
       - build.env
+    reports:
+      dotenv: build.env
 
 job3:
   image: node:18-alpine
