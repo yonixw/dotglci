@@ -4,7 +4,7 @@
 set -e
 
 logx () {
-    echo "[*] [$(date +'%F %T')] $@"
+    echo "[****] [$(date +'%F %T')] $@"
 }
 
 # Steps:
@@ -20,44 +20,56 @@ logx () {
 DEV_ROOT_PASS=TestStrongTextDontUse!
 DEV_ROOT_ACC=token-string-ABYZ000
 
-
-RUNNER_TOKEN=$(curl -X POST "http://localhost:15080/api/v4/user/runners" \
-    --header "private-token: $DEV_ROOT_ACC" \
-    --header 'content-type: application/json' \
-    --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner1\"}" \
-  | jq -r '.token' )
-
-gitlab-runner register
-    --non-interactive \
-    --executor "shell" \
-    --url "http://localhost:15080/" \
-    --token "$RUNNER_TOKEN"
-
-logx "Registering workers"
-
-exit 0 #----------------------------------------------------
-
-
 logx "Starting the docker... (~1.4GB pull)"
 
-    docker-compose up gitlab -d
+    docker-compose up --remove-orphans -d gitlab
 
 logx "Waiting for HTTP server..."
 
-    curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://localhost:15080
+    docker-compose run -it --rm helper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
 
 logx "Setting up access token..."
 
     docker-compose exec gitlab gitlab-rails runner "\
-        token = User.find_by_username('root').personal_access_tokens.create(scopes: ['api','admin_mode'], name: 'Automation token $(date +'%F %T')'); \
+        token = User.find_by_username('root').personal_access_tokens.create( \
+            scopes: ['api'], \
+            name: 'Automation token $(date +'%F %T')' \
+        ); \
         token.set_token('$DEV_ROOT_ACC'); \
         token.save!"
 
-# Rails.logger.level = 0
-# ActiveRecord::Base.logger = Logger.new(STDOUT)
+logx "Registering workers... 1/2"
 
-## Check the GitLab version fast
-## grep -m 1 gitlab /opt/gitlab/version-manifest.txt
+#docker-compose up -d runner1 
+
+RUNNER_TOKEN=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    --header "private-token: $DEV_ROOT_ACC" \
+    --header 'content-type: application/json' \
+    --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner1 $(date +'%F %T')\"}" \
+  | jq -r '.token' )
+
+docker-compose run runner1 register \
+    --non-interactive \
+    --executor "docker" \
+    --url "http://gitlab:80/" \
+    --docker-image "ubuntu" \
+    --token "$RUNNER_TOKEN"
 
 
+logx "Registering workers... 2/2"
+
+#docker-compose up -d runner2
+
+RUNNER_TOKEN2=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    --header "private-token: $DEV_ROOT_ACC" \
+    --header 'content-type: application/json' \
+    --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner2 $(date +'%F %T')\"}" \
+  | jq -r '.token' )
+
+docker-compose run runner2 register \
+    --non-interactive \
+    --executor "docker" \
+    --url "http://gitlab:80/" \
+    --docker-image "ubuntu" \
+    --token "$RUNNER_TOKEN2"
 

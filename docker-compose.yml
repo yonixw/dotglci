@@ -1,5 +1,23 @@
 version: '3.6'
 services:
+  helper:
+    image: curlimages/curl
+    networks:
+      - gitlab-local-ci
+    links:
+      - "gitlab:gitlab"
+  runner1:
+    image: 'gitlab/gitlab-runner:ubuntu'
+    networks:
+      - gitlab-local-ci
+    links:
+      - "gitlab:gitlab"
+  runner2:
+    image: 'gitlab/gitlab-runner:ubuntu'
+    networks:
+      - gitlab-local-ci
+    links:
+      - "gitlab:gitlab"
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
@@ -8,7 +26,7 @@ services:
       GITLAB_ROOT_PASSWORD: TestPasswordDontUse!
       GITLAB_OMNIBUS_CONFIG: |
         # Add any other gitlab.rb configuration here, each on its own line
-        external_url "https://15080-yonixw-localgitlabci-v096dftcz3b.ws-us97.gitpod.io"
+        external_url "http://gitlab:80"
         letsencrypt['enable'] = false
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
