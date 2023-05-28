@@ -4,6 +4,7 @@ job1:
   script:
     #    - printenv
     - echo ok
+    - mkdir -p ./artifacts
     - echo job1 > ./artifacts/job1.txt
   artifacts:
     expire_in: 24 hour # default is 30days
