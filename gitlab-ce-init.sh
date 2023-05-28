@@ -17,7 +17,15 @@ logx () {
 #   6. Add "local-gitlab-ci" origin and push the git (creates on push)
 #   7. Reapeat step (6) to test ci changes
 
-# todo - script for push and get latests run->jobs->logs
+# todo 
+#   - script for push and get latests run->jobs->logs
+#       - add env? (foreach add, remove every time? just give it to runner?)
+#   how to start masking env?
+#   dind - docker build!
+
+#   timestamps?
+#   publish html?
+#   needs? requirements?
 
 DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
