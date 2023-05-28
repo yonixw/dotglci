@@ -1,0 +1,5 @@
+registry.gitlab.com/gitlab-org/gitlab-runner/gitlab-runner-helper   x86_64-79704081   25245c218db3   2 hours ago   65.8MB
+gitlab/gitlab-runner                                                ubuntu            a57265cad057   4 days ago    753MB
+curlimages/curl                                                     latest            1a43ba337092   5 days ago    18.5MB
+gitlab/gitlab-ce                                                    latest            090583df817a   6 days ago    2.95GB
+ubuntu                                                              latest            3b418d7b466a   4 weeks ago   77.8MB

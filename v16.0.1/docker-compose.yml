@@ -2,36 +2,33 @@ version: '3.6'
 services:
 
   helper:
-    image: curlimages/curl:latest@sha256:1a43ba337092
+    image: curlimages/curl:latest
     networks:
-      - gitlab-local-ci
-    links:
-      - "gitlab:gitlab"
+      - gitlab_ci_local
 
   runner1:
-    image: 'gitlab/gitlab-runner:ubuntu@sha256:a57265cad057'
+    image: gitlab/gitlab-runner:ubuntu
     volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
       - runner1cfg:/etc/gitlab-runner/
     networks:
-      - gitlab-local-ci
-    links:
-      - "gitlab:gitlab"
+      - gitlab_ci_local
 
   runner2:
-    image: 'gitlab/gitlab-runner:ubuntu@sha256:a57265cad057'
+    image: gitlab/gitlab-runner:ubuntu
     volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
       - runner2cfg:/etc/gitlab-runner/
     networks:
-      - gitlab-local-ci
-    links:
-      - "gitlab:gitlab"
+      - gitlab_ci_local
 
   gitlab:
-    image: 'gitlab/gitlab-ce:latest@sha256:090583df817a'
+    image: gitlab/gitlab-ce:latest
     restart: always
     hostname: gitlab
+    container_name: gitlab
     environment:
-      GITLAB_ROOT_PASSWORD: TestPasswordDontUse!
+      GITLAB_ROOT_PASSWORD: LongComplexText0000!
       GITLAB_OMNIBUS_CONFIG: |
         # Add any other gitlab.rb configuration here, each on its own line
         external_url "http://gitlab:80"
@@ -40,9 +37,9 @@ services:
         nginx['listen_https'] = false
     ports:
       - '15080:80'
-    networks:
-      - gitlab-local-ci
     shm_size: '256m'
+    networks:
+      - gitlab_ci_local
     #    volumes:
     #      - './data/config:/etc/gitlab'
     #      - './data/logs:/var/log/gitlab'
@@ -54,5 +51,6 @@ volumes:
 
 
 networks:
-  gitlab-local-ci:
+  gitlab_ci_local:
+    name: gitlab_ci_local
     driver: bridge
