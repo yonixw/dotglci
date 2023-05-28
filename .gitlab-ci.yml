@@ -2,7 +2,13 @@
 job1:
   stage: build
   script:
-    - printenv
+    #    - printenv
+    - echo ok
+    - echo job1 > ./artifacts/job1.txt
+  artifacts:
+    expire_in: 24 hour # default is 30days
+    paths:
+      - ./artifacts/*
 
 job2:
   stage: build
@@ -10,6 +16,11 @@ job2:
     - printenv
 
 job3:
+  needs:
+    - "job1"
   stage: test
   script:
-    - printenv
+    - ls -la ./artifacts/
+    - echo ./artifacts/job1.txt
+    - ls -la .
+#    - printenv
