@@ -2,14 +2,14 @@ version: '3.6'
 services:
 
   helper:
-    image: curlimages/curl:latest
+    image: curlimages/curl:latest@sha256:1a43ba337092
     networks:
       - gitlab-local-ci
     links:
       - "gitlab:gitlab"
 
   runner1:
-    image: gitlab/gitlab-runner:ubuntu
+    image: 'gitlab/gitlab-runner:ubuntu@sha256:a57265cad057'
     volumes:
       - runner1cfg:/etc/gitlab-runner/
     networks:
@@ -18,7 +18,7 @@ services:
       - "gitlab:gitlab"
 
   runner2:
-    image: gitlab/gitlab-runner:ubuntu
+    image: 'gitlab/gitlab-runner:ubuntu@sha256:a57265cad057'
     volumes:
       - runner2cfg:/etc/gitlab-runner/
     networks:
@@ -27,7 +27,7 @@ services:
       - "gitlab:gitlab"
 
   gitlab:
-    image: gitlab/gitlab-ce:latest
+    image: 'gitlab/gitlab-ce:latest@sha256:090583df817a'
     restart: always
     hostname: gitlab
     environment:
