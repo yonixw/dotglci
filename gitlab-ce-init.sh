@@ -19,18 +19,21 @@ logx () {
 
 # todo - script for push and get latests run->jobs->logs
 
-DEV_ROOT_PASS=root
+DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
 
 logx "Starting the docker... (~1.4GB pull->3GB unzip)"
 
     docker-compose down --volumes || logx "Skipping docker down..."
     git remote remove local-gitlab-ci || logx "Skipping git remote remove..."
-    docker-compose up --remove-orphans -d gitlab
+    docker-compose up --remove-orphans --force-recreate -d gitlab
 
 logx "Waiting for HTTP server..."
 
-    docker-compose run -it --rm helper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
+    #docker-compose logs --timestamps --follow  gitlab &
+    #LOGS_JOB=$!
+    docker-compose run --rm helper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
+    #kill $LOGS_JOB
 
 logx "Setting up access token..."
 
@@ -56,7 +59,7 @@ logx "Registering workers... 1/2"
         --executor "docker" \
         --url "http://gitlab:80/" \
         --docker-image "ubuntu" \
-        --docker-network-mode "bridge" \
+        --docker-network-mode "gitlab_ci_local" \
         --docker-links "gitlab" \
         --token "$RUNNER_TOKEN"
 
@@ -73,7 +76,7 @@ logx "Registering workers... 2/2"
         --non-interactive \
         --executor "docker" \
         --url "http://gitlab:80/" \
-        --docker-network-mode "bridge" \
+        --docker-network-mode "gitlab_ci_local" \
         --docker-image "ubuntu" \
         --docker-links "gitlab" \
         --token "$RUNNER_TOKEN2"
