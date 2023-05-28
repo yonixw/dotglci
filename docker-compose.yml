@@ -1,21 +1,27 @@
 version: '3.6'
 services:
-  web:
+  gitlab:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
     hostname: gitlab
     environment:
-      GITLAB_ROOT_PASSWORD: PasswordStrong321!
+      GITLAB_ROOT_PASSWORD: TestPasswordDontUse!
       GITLAB_OMNIBUS_CONFIG: |
         # Add any other gitlab.rb configuration here, each on its own line
-        external_url "https://80-yonixw-localgitlabci-v096dftcz3b.ws-us97.gitpod.io"
+        external_url "https://15080-yonixw-localgitlabci-v096dftcz3b.ws-us97.gitpod.io"
         letsencrypt['enable'] = false
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
     ports:
-      - '80:80'
-    volumes:
-      - './data/config:/etc/gitlab'
-      - './data/logs:/var/log/gitlab'
-      - './data/data:/var/opt/gitlab'
+      - '15080:80'
+    networks:
+      - gitlab-local-ci
     shm_size: '256m'
+    #    volumes:
+    #      - './data/config:/etc/gitlab'
+    #      - './data/logs:/var/log/gitlab'
+    #      - './data/data:/var/opt/gitlab'
+
+networks:
+  gitlab-local-ci:
+    driver: bridge
