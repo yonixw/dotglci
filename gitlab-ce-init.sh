@@ -14,8 +14,10 @@ logx () {
 #   5. Register 2 workers 
 #       5a. Get "authentication token" instead of old <v16 "registration token"
 #   4. Using terraform with access token, create all needed inside structure
-#   6. Add "local-gitlab-ci" origin and push the git
+#   6. Add "local-gitlab-ci" origin and push the git (creates on push)
 #   7. Reapeat step (6) to test ci changes
+
+# todo - script for push and get latests run->jobs->logs
 
 DEV_ROOT_PASS=TestStrongTextDontUse!
 DEV_ROOT_ACC=token-string-ABYZ000
@@ -33,7 +35,7 @@ logx "Setting up access token..."
 
     docker-compose exec gitlab gitlab-rails runner "token = \
         User.find_by_username('root').personal_access_tokens.create( \
-            scopes: ['api'], \
+            scopes: ['api','read_repository', 'write_repository'], \
             name: 'Automation token $(date +'%F %T')' \
         ); \
         token.set_token('$DEV_ROOT_ACC'); \
@@ -75,5 +77,10 @@ logx "Starting workers..."
 
     docker-compose up -d runner1 runner2
 
-
 logx "Done local-gitlab-ci setup!"
+
+logx "Adding remote..."
+
+    git remote add local-gitlab-ci "http://root:$DEV_ROOT_ACC@localhost:15080/root/local-gitlab-ci.git"
+
+logx "Finished! Use: \"git push local-gitlab-ci\" to push"

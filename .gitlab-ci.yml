@@ -1,0 +1,15 @@
+---
+job1:
+  stage: build
+  script:
+    - printenv
+
+job2:
+  stage: build
+  script:
+    - printenv
+
+job3:
+  stage: test
+  script:
+    - printenv
