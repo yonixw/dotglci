@@ -1,23 +1,31 @@
 version: '3.6'
 services:
+
   helper:
     image: curlimages/curl
     networks:
       - gitlab-local-ci
     links:
       - "gitlab:gitlab"
+
   runner1:
     image: 'gitlab/gitlab-runner:ubuntu'
+    volumes:
+      - runner1cfg:/etc/gitlab-runner/
     networks:
       - gitlab-local-ci
     links:
       - "gitlab:gitlab"
+
   runner2:
     image: 'gitlab/gitlab-runner:ubuntu'
+    volumes:
+      - runner2cfg:/etc/gitlab-runner/
     networks:
       - gitlab-local-ci
     links:
       - "gitlab:gitlab"
+
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
     restart: always
@@ -39,6 +47,11 @@ services:
     #      - './data/config:/etc/gitlab'
     #      - './data/logs:/var/log/gitlab'
     #      - './data/data:/var/opt/gitlab'
+
+volumes:
+  runner1cfg:
+  runner2cfg:
+
 
 networks:
   gitlab-local-ci:

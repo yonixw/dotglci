@@ -22,6 +22,7 @@ DEV_ROOT_ACC=token-string-ABYZ000
 
 logx "Starting the docker... (~1.4GB pull)"
 
+    docker-compose down --volumes
     docker-compose up --remove-orphans -d gitlab
 
 logx "Waiting for HTTP server..."
@@ -30,8 +31,8 @@ logx "Waiting for HTTP server..."
 
 logx "Setting up access token..."
 
-    docker-compose exec gitlab gitlab-rails runner "\
-        token = User.find_by_username('root').personal_access_tokens.create( \
+    docker-compose exec gitlab gitlab-rails runner "token = \
+        User.find_by_username('root').personal_access_tokens.create( \
             scopes: ['api'], \
             name: 'Automation token $(date +'%F %T')' \
         ); \
@@ -39,8 +40,6 @@ logx "Setting up access token..."
         token.save!"
 
 logx "Registering workers... 1/2"
-
-#docker-compose up -d runner1 
 
 RUNNER_TOKEN=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
     --header "private-token: $DEV_ROOT_ACC" \
@@ -58,8 +57,6 @@ docker-compose run runner1 register \
 
 logx "Registering workers... 2/2"
 
-#docker-compose up -d runner2
-
 RUNNER_TOKEN2=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
     --header "private-token: $DEV_ROOT_ACC" \
     --header 'content-type: application/json' \
@@ -73,3 +70,8 @@ docker-compose run runner2 register \
     --docker-image "ubuntu" \
     --token "$RUNNER_TOKEN2"
 
+logx "Starting workers..."
+
+docker-compose up -d runner1 runner2
+
+logx "Done init!"
