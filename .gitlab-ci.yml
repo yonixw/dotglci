@@ -6,22 +6,33 @@ job1:
     - echo ok
     - mkdir -p ./artifacts
     - echo job1 > ./artifacts/job1.txt
+    - echo "A=$(echo 11)" > build.env
   artifacts:
     expire_in: 24 hour # default is 30days
     paths:
       - ./artifacts/*
+      - build.env
 
 job2:
   stage: build
   script:
     - printenv
+    - echo "B=$(echo 22)" > build.env
+  artifacts:
+    expire_in: 24 hour # default is 30days
+    paths:
+      - build.env
 
 job3:
   image: node:18-alpine
   needs:
-    - "job1"
+    - job: "job1"
+      artifacts: true
+    - job: "job2"
+      artifacts: true
   stage: test
   script:
+    - echo A=$A, B=$B
     - ls -la ./artifacts/
     - cat ./artifacts/job1.txt
     - ls -la .
