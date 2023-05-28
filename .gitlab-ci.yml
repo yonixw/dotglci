@@ -17,11 +17,13 @@ job2:
     - printenv
 
 job3:
+  image: node:18-alpine
   needs:
     - "job1"
   stage: test
   script:
     - ls -la ./artifacts/
-    - echo ./artifacts/job1.txt
+    - cat ./artifacts/job1.txt
     - ls -la .
+    - node -v
 #    - printenv
