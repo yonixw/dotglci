@@ -49,3 +49,10 @@ job3:
     - ls -la .
     - node -v
 #    - printenv
+
+job4:
+  stage: test
+  script:
+    - "echo time is `date`"
+  when: delayed
+  start_in: 3 minutes
