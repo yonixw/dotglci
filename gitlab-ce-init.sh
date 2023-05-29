@@ -20,14 +20,17 @@ logx () {
 # todo 
 #   - script for push and get latests run->jobs->logs
 #       - add env? (foreach add, remove every time? just give it to runner?)
+#       - POST /projects/:id/pipeline, wait for id, print every job that is done...
 #   how to start masking env?
-#   dind - docker build!
-#   long uninterupted sleep?
+#       only by adding it to api...
+#V   dind - docker build!
+#V  long uninterupted sleep?
 #   gitlab actions? (not repo dependant)
+#   on job fail? stage fail? anyhow fail - cleanup?
 
 #   timestamps?
 #   publish html?
-#   needs? requirements?
+#   needs/dependencies? requirements?
 
 DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
