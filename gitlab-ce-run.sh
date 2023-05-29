@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-#git push local-gitlab-ci
-#sudo tail -f ./data/builds/**/*.log -f ./data/builds/*.log
-#sudo find ./data/builds/ -name "*.log" | sudo xargs tail -qf
+git push local-gitlab-ci
 
-
-
-#tail -f "$1" &  # start tailing in the background
-#while [[ -f $1 ]]; do sleep 0.1; done # periodically check if target still exists
-#kill $! 2>/dev/null || : # kill tailing process, ignoring errors if already dead
+# Kill all bg on Ctrl-C
+trap '(jobs -p | xargs --no-run-if-empty kill -9); echo "Ctrl-C"; exit' INT 
 
 start=`date`
 echo "Start time: $start"
@@ -32,40 +27,17 @@ pipe_lines() {
 
 tail_until_nofile() {
     (tail -f "$1" | pipe_lines $(basename "$1")) &  # start tailing in the background
-    BG_PID=$!
+    BGPID=$!
     while [[ -f $1 ]]; do sleep 0.1; done # periodically check if target still exists
-    kill BG_PID 2>/dev/null || : # kill tailing process, ignoring errors if already dead
+    echo "File $1 not exist, stop tail"
+    kill $BGPID 2>/dev/null || : # kill tailing process, ignoring errors if already dead
 }
 
+find ./data/builds/ -name "*.log" |
+    while IFS= read -r line; do
+        echo "Found $line"
+        tail_until_nofile $line  &
+    done
 
+echo "End time: $start"
 
-
-cat <<START | pipe_lines MyPrefix
-1
-2
-3
-1
-2
-3
-1
-2
-3
-1
-2
-3
-1
-2
-3
-1
-2
-3
-1
-2
-3
-START
-
-echo $(date +"%d.%m %Z-%T.%N")
-echo $(date +"%d.%m %Z-%T.%N")
-
-
-tail_until_nofile ./1.txt
