@@ -93,10 +93,8 @@ logx "Starting workers..."
 
     docker-compose up -d runner1 runner2
 
-logx "Done local-gitlab-ci setup!"
-
 logx "Adding remote..."
 
     git remote add local-gitlab-ci "http://root:$DEV_ROOT_ACC@localhost:15080/root/local-gitlab-ci.git"
 
-logx "Finished! Use: \"git push local-gitlab-ci\" to push"
+logx "Done local-gitlab-ci setup!"

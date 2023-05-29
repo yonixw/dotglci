@@ -8,6 +8,8 @@ services:
 
   runner1:
     image: gitlab/gitlab-runner:ubuntu
+    environment:
+      - XYZ=runner1
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - runner1cfg:/etc/gitlab-runner/
@@ -16,6 +18,8 @@ services:
 
   runner2:
     image: gitlab/gitlab-runner:ubuntu
+    environment:
+      - XYZ=runner2
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - runner2cfg:/etc/gitlab-runner/
@@ -35,9 +39,13 @@ services:
         letsencrypt['enable'] = false
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
+        gitlab_rails['artifacts_path'] = "/mnt/ci/artifacts"
+        gitlab_ci['builds_directory'] = '/mnt/ci/builds'
     ports:
       - '15080:80'
     shm_size: '256m'
+    volumes:
+      - ./data/:/mnt/ci/
     networks:
       - gitlab_ci_local
     #    volumes:
