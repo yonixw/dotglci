@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # exit when any command fails
 set -e
@@ -22,6 +22,8 @@ logx () {
 #       - add env? (foreach add, remove every time? just give it to runner?)
 #   how to start masking env?
 #   dind - docker build!
+#   long uninterupted sleep?
+#   gitlab actions? (not repo dependant)
 
 #   timestamps?
 #   publish html?
