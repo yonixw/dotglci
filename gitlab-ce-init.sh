@@ -41,15 +41,16 @@ logx () {
 DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
 
-logx "Pulling images (gitlab is ~1.4GB pull->3GB unzip) ..."
-
-    docker-compose pull
-
 logx "Starting the gitlab docker... "
+logx "(gitlab is ~1.4GB pull->3GB unzip) ..."
 
     docker-compose down --volumes || logx "Skipping docker down..."
     git remote remove local-gitlab-ci || logx "Skipping git remote remove..."
     docker-compose up --remove-orphans --force-recreate -d gitlab
+
+logx "Pulling images in the meantime... "
+
+    docker-compose pull
 
 logx "Waiting for HTTP server..."
 
@@ -60,6 +61,7 @@ logx "Waiting for HTTP server..."
 
 logx "Setting up access token..."
 
+    # the ruby script must start in first row (can't be empty due to bash linebreaks)
     docker-compose exec gitlab gitlab-rails runner "token = \
         User.find_by_username('root').personal_access_tokens.create( \
             scopes: ['api','read_repository', 'write_repository'], \
