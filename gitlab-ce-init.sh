@@ -32,6 +32,12 @@ logx () {
 #   publish html?
 #   needs/dependencies? requirements?
 
+# secrets + project via terrafrom from yaml? (type + masked)
+    # ts-node to remove and re-apply? using .env too?
+# ts-node scipt *after* push, wait for jobs, get logs+artifacts (folder by id? name?), wait for pipeline
+#   timestamps convert? html color convert?
+
+
 DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
 
