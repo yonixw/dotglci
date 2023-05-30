@@ -32,6 +32,7 @@ services:
     restart: always
     hostname: gitlab
     container_name: gitlab
+    # login username: root, pass in env:
     environment:
       GITLAB_ROOT_PASSWORD: LongComplexText0000!
       GITLAB_OMNIBUS_CONFIG: |
