@@ -41,7 +41,11 @@ logx () {
 DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
 
-logx "Starting the docker... (~1.4GB pull->3GB unzip)"
+logx "Pulling images (gitlab is ~1.4GB pull->3GB unzip) ..."
+
+    docker-compose pull
+
+logx "Starting the gitlab docker... "
 
     docker-compose down --volumes || logx "Skipping docker down..."
     git remote remove local-gitlab-ci || logx "Skipping git remote remove..."
@@ -51,7 +55,7 @@ logx "Waiting for HTTP server..."
 
     #docker-compose logs --timestamps --follow  gitlab &
     #LOGS_JOB=$!
-    docker-compose run --rm helper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
+    docker-compose run --rm curlhelper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
     #kill $LOGS_JOB
 
 logx "Setting up access token..."
@@ -67,7 +71,7 @@ logx "Setting up access token..."
 logx "Setting up workers... (~0.7GB docker unzip)"
 logx "Registering workers... 1/2"
 
-    RUNNER_TOKEN=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    RUNNER_TOKEN=$(docker-compose run --rm curlhelper curl -X POST "http://gitlab:80/api/v4/user/runners" \
         --header "private-token: $DEV_ROOT_ACC" \
         --header 'content-type: application/json' \
         --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner1 $(date +'%F %T')\"}" \
@@ -85,7 +89,7 @@ logx "Registering workers... 1/2"
 
 logx "Registering workers... 2/2"
 
-    RUNNER_TOKEN2=$(docker-compose run --rm helper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    RUNNER_TOKEN2=$(docker-compose run --rm curlhelper curl -X POST "http://gitlab:80/api/v4/user/runners" \
         --header "private-token: $DEV_ROOT_ACC" \
         --header 'content-type: application/json' \
         --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner2 $(date +'%F %T')\"}" \
