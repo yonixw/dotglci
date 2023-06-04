@@ -37,15 +37,12 @@ logx () {
 # ts-node scipt *after* push, wait for jobs, get logs+artifacts (folder by id? name?), wait for pipeline
 #   timestamps convert? html color convert?
 
-
-DEV_ROOT_PASS=LongComplexText0000!
 DEV_ROOT_ACC=token-string-ABYZ000
 
 logx "Starting the gitlab docker... "
 logx "(gitlab is ~1.4GB pull->3GB unzip) ..."
 
     docker-compose down --volumes || logx "Skipping docker down..."
-    git remote remove local-gitlab-ci || logx "Skipping git remote remove..."
     docker-compose up --remove-orphans --force-recreate -d gitlab
 
 logx "Pulling images in the meantime... "
@@ -109,11 +106,5 @@ logx "Registering workers... 2/2"
 logx "Starting workers..."
 
     docker-compose up -d runner1 runner2
-
-
-PROJ_NAME=$(basename $(git rev-parse --show-toplevel) | sed -e "s/[^0-9a-zA-Z]/_/g" ) 
-logx "Adding remote for project \"$PROJ_NAME\"..."
-
-    git remote add local-gitlab-ci "http://root:$DEV_ROOT_ACC@localhost:15080/root/$PROJ_NAME.git"
 
 logx "Done local-gitlab-ci setup!"
