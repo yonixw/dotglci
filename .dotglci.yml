@@ -1,11 +1,32 @@
 # Env files to populate vars (if no value set) in workspace
+# Last will replace first etc.
 env_files:
   - .env
+  - .env.dev
+
+# variable_type:
+#     env_var (default) | file | dotglci_manual
+
+# masked (default: false)
+#     only if "env_var", see other limitations:
+#     https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable
+
+# dotglci_manual will put it in pipeline variable, simulating manual run
 
 variables:
-  - variable_type:
+  - variable_type: env_var
     masked: false
-    key: EXAMPLE
+    key: EXAMPLE_SET_VALUE
     value: |
       Multi line
+      YAML
       Example
+  - key: VAR_X
+    masked: false
+    variable_type: env_var
+  - key: VAR_Y
+    masked: true
+    variable_type: env_var
+  - key: VAR_Z
+    variable_type: file
+  - key: MY_ENV

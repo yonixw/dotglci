@@ -19,7 +19,6 @@ logx () {
 }
 
 # todo 
-#   - create project via API on run.sh? o.w problem of var update fail before push
 #   - script for push and get latests run->jobs->logs+artifacts+reports
 #       timestamps?
 #       publish html? unzip stuff?

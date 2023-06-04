@@ -29,14 +29,13 @@ logx "Update variables for project..."
     # Write permission to download artifacts+logs+reports
     docker-compose run --rm \
         -v $(pwd):/workspace \
-        -v $(pwd)/update-gl-vars.deno.ts:/app/main.ts \
         -e "DOTGLCI_PROJ_NAME=$DOTGLCI_PROJ_NAME" \
         denohelper run \
             --allow-env \
             --allow-net=dotgitlabci \
-            --allow-read=/workspace,/app \
+            --allow-read=/workspace \
             --allow-write=/workspace/.dotglci \
-            /app/main.ts
+            /workspace/update-gl-vars.deno.ts
 
 
 logx "Updating remote for project \"$DOTGLCI_PROJ_NAME\"..."
@@ -47,3 +46,7 @@ logx "Updating remote for project \"$DOTGLCI_PROJ_NAME\"..."
 #logx "Pushing for local gitlab ci..."
 #
 #    git push local-gitlab-ci
+
+#logx "Manual pipeline run if dotglci_manual variable exist:"
+#
+#
