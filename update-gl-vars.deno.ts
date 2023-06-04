@@ -1,7 +1,8 @@
 // API version (v4) can be found in the /admin page
 const API_URL = Deno.env.get("API_URL") || "http://gitlab:80/api/v4" 
 const API_TOKEN = Deno.env.get("API_TOKEN") || "token-string-ABYZ000"
-const PROJ_URL = Deno.env.get("PROJ_URL") || "root/local-gitlab-ci"
+const PROJ_NAME = Deno.env.get("PROJ_NAME") || "local-gitlab-ci"
+const PROJ_URL = Deno.env.get("PROJ_URL") || "root/" + PROJ_NAME
 
 const KNOWN_API = {
     stats: "/application/statistics",

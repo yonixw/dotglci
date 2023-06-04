@@ -110,8 +110,10 @@ logx "Starting workers..."
 
     docker-compose up -d runner1 runner2
 
-logx "Adding remote..."
 
-    git remote add local-gitlab-ci "http://root:$DEV_ROOT_ACC@localhost:15080/root/local-gitlab-ci.git"
+PROJ_NAME=$(basename $(git rev-parse --show-toplevel) | sed -e "s/[^0-9a-zA-Z]/_/g" ) 
+logx "Adding remote for project \"$PROJ_NAME\"..."
+
+    git remote add local-gitlab-ci "http://root:$DEV_ROOT_ACC@localhost:15080/root/$PROJ_NAME.git"
 
 logx "Done local-gitlab-ci setup!"
