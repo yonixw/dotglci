@@ -43,7 +43,7 @@ logx "Starting the gitlab docker... "
 logx "(gitlab is ~1.4GB pull->3GB unzip) ..."
 
     docker-compose down --volumes || logx "Skipping docker down..."
-    docker-compose up --remove-orphans --force-recreate -d gitlab
+    docker-compose up --remove-orphans --force-recreate -d dotgitlabci
 
 logx "Pulling images in the meantime... "
 
@@ -53,13 +53,15 @@ logx "Waiting for HTTP server..."
 
     #docker-compose logs --timestamps --follow  gitlab &
     #LOGS_JOB=$!
-    docker-compose run --rm curlhelper curl --head -X GET --retry 30 --retry-all-errors --retry-delay 30 http://gitlab:80
+    docker-compose run --rm curlhelper curl \
+        --head -X GET --retry 30 --retry-all-errors --retry-delay 30 \
+        http://dotgitlabci:80
     #kill $LOGS_JOB
 
 logx "Setting up access token..."
 
     # the ruby script must start in first row (can't be empty due to bash linebreaks)
-    docker-compose exec gitlab gitlab-rails runner "token = \
+    docker-compose exec dotgitlabci gitlab-rails runner "token = \
         User.find_by_username('root').personal_access_tokens.create( \
             scopes: ['api','read_repository', 'write_repository'], \
             name: 'Automation token $(date +'%F %T')' \
@@ -70,7 +72,7 @@ logx "Setting up access token..."
 logx "Setting up workers... (~0.7GB docker unzip)"
 logx "Registering workers... 1/2"
 
-    RUNNER_TOKEN=$(docker-compose run --rm curlhelper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    RUNNER_TOKEN=$(docker-compose run --rm curlhelper curl -X POST "http://dotgitlabci:80/api/v4/user/runners" \
         --header "private-token: $DEV_ROOT_ACC" \
         --header 'content-type: application/json' \
         --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner1 $(date +'%F %T')\"}" \
@@ -79,16 +81,16 @@ logx "Registering workers... 1/2"
     docker-compose run runner1 register \
         --non-interactive \
         --executor "docker" \
-        --url "http://gitlab:80/" \
+        --url "http://dotgitlabci:80/" \
         --docker-image "ubuntu" \
         --docker-network-mode "gitlab_ci_local" \
-        --docker-links "gitlab" \
+        --docker-links "dotgitlabci" \
         --token "$RUNNER_TOKEN"
 
 
 logx "Registering workers... 2/2"
 
-    RUNNER_TOKEN2=$(docker-compose run --rm curlhelper curl -X POST "http://gitlab:80/api/v4/user/runners" \
+    RUNNER_TOKEN2=$(docker-compose run --rm curlhelper curl -X POST "http://dotgitlabci:80/api/v4/user/runners" \
         --header "private-token: $DEV_ROOT_ACC" \
         --header 'content-type: application/json' \
         --data "{\"runner_type\":\"instance_type\",\"runUntagged\":true,\"description\":\"My runner2 $(date +'%F %T')\"}" \
@@ -97,10 +99,10 @@ logx "Registering workers... 2/2"
     docker-compose run runner2 register \
         --non-interactive \
         --executor "docker" \
-        --url "http://gitlab:80/" \
+        --url "http://dotgitlabci:80/" \
         --docker-network-mode "gitlab_ci_local" \
         --docker-image "ubuntu" \
-        --docker-links "gitlab" \
+        --docker-links "dotgitlabci" \
         --token "$RUNNER_TOKEN2"
 
 logx "Starting workers..."

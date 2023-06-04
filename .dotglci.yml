@@ -1,0 +1,9 @@
+# Env files to populate vars (if no value set)
+env_files:
+  - .env
+
+variables:
+  - variable_type:
+    masked: false
+    key: EXAMPLE
+    value:

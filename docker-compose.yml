@@ -29,17 +29,17 @@ services:
     networks:
       - gitlab_ci_local
 
-  gitlab:
+  dotgitlabci:
     image: gitlab/gitlab-ce:latest
     restart: always
-    hostname: gitlab
-    container_name: gitlab
+    hostname: dotgitlabci
+    container_name: dotgitlabci
     # login username: root, pass in env:
     environment:
       GITLAB_ROOT_PASSWORD: LongComplexText0000!
       GITLAB_OMNIBUS_CONFIG: |
         # Add any other gitlab.rb configuration here, each on its own line
-        external_url "http://gitlab:80"
+        external_url "http://dotgitlabci:80"
         letsencrypt['enable'] = false
         nginx['listen_port'] = 80
         nginx['listen_https'] = false
