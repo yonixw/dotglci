@@ -1,4 +1,4 @@
-# Env files to populate vars (if no value set)
+# Env files to populate vars (if no value set) in workspace
 env_files:
   - .env
 
@@ -6,4 +6,6 @@ variables:
   - variable_type:
     masked: false
     key: EXAMPLE
-    value:
+    value: |
+      Multi line
+      Example

@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# How it works, Steps:
+#   1. Start the gitlab docker and let it init
+#   2. Wait until response from HTTP port
+#   3. Create access key with ruby bash inside docker
+#   4. Register 2 workers 
+#       4a. Get "authentication token" instead of old <v16 "registration token"
+#   5. Using deno script with access token, create/update all needed inside structure
+#       5a. Like variables
+#   6. Add "local-gitlab-ci" origin and push the git (creates on push)
+#   7. Reapeat step (6) to test ci changes
+
 # exit when any command fails
 set -e
 
@@ -7,35 +18,18 @@ logx () {
     echo "[****] [$(date +'%F %T')] $@"
 }
 
-# Steps:
-#   1. Start the gitlab docker and let it init
-#   2. Wait until response from HTTP port
-#   3. Create access key with ruby bash inside docker
-#   5. Register 2 workers 
-#       5a. Get "authentication token" instead of old <v16 "registration token"
-#   4. Using terraform with access token, create all needed inside structure
-#   6. Add "local-gitlab-ci" origin and push the git (creates on push)
-#   7. Reapeat step (6) to test ci changes
-
 # todo 
-#   - script for push and get latests run->jobs->logs
-#       - add env? (foreach add, remove every time? just give it to runner?)
+#   - create project via API on run.sh? o.w problem of var update fail before push
+#   - script for push and get latests run->jobs->logs+artifacts+reports
+#       timestamps?
+#       publish html? unzip stuff?
+#       console colors?
 #       - POST /projects/:id/pipeline, wait for id, print every job that is done...
-#   how to start masking env?
-#       only by adding it to api...
-#V   dind - docker build!
-#V  long uninterupted sleep?
+
+# Gitlab howto?
 #   gitlab actions? (not repo dependant)
 #   on job fail? stage fail? anyhow fail - cleanup?
-
-#   timestamps?
-#   publish html?
-#   needs/dependencies? requirements?
-
-# secrets + project via terrafrom from yaml? (type + masked)
-    # ts-node to remove and re-apply? using .env too?
-# ts-node scipt *after* push, wait for jobs, get logs+artifacts (folder by id? name?), wait for pipeline
-#   timestamps convert? html color convert?
+#       like storybook fail on changes = need manual approve, o.w auto approve
 
 DEV_ROOT_ACC=token-string-ABYZ000
 
