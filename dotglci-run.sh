@@ -10,6 +10,11 @@ logx () {
 DEV_ROOT_ACC=token-string-ABYZ000
 DOTGLCI_PROJ_NAME=$(basename $(git rev-parse --show-toplevel) | sed -e "s/[^0-9a-zA-Z]/_/g" ) 
 
+logx "Check gitlab docker healthy"...
+
+    docker-compose run --rm curlhelper curl \
+        --head -X GET http://dotgitlabci:80
+
 logx "Create project skeleton (will be taken after first run)..."
 
     docker-compose run --rm curlhelper curl \
@@ -19,7 +24,7 @@ logx "Create project skeleton (will be taken after first run)..."
             \"description\": \"Project for git folder $DOTGLCI_PROJ_NAME\", \
             \"path\": \"$DOTGLCI_PROJ_NAME\",
             \"namespace_id\": \"1\", \
-            \"initialize_with_readme\": \"true\" \
+            \"initialize_with_readme\": \"false\" \
         }" \
         --url 'http://dotgitlabci:80/api/v4/projects/'
 
@@ -29,12 +34,13 @@ logx "Update variables for project..."
     # Write permission to download artifacts+logs+reports
     docker-compose run --rm \
         -v $(pwd):/workspace \
+        -w "/workspace" \
         -e "DOTGLCI_PROJ_NAME=$DOTGLCI_PROJ_NAME" \
         denohelper run \
             --allow-env \
             --allow-net=dotgitlabci \
-            --allow-read=/workspace \
-            --allow-write=/workspace/.dotglci \
+            --allow-read=/workspace,/tmp \
+            --allow-write=/workspace/.dotglci,/tmp \
             /workspace/update-gl-vars.deno.ts
 
 

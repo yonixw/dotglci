@@ -1,3 +1,7 @@
+import { parse, stringify } from "https://deno.land/std@0.190.0/yaml/mod.ts";
+import * as dotenv from "https://deno.land/std@0.190.0/dotenv/mod.ts";
+
+
 // API version (v4) can be found in the /admin page
 const API_URL = Deno.env.get("API_URL") || "http://dotgitlabci:80/api/v4" 
 const API_TOKEN = Deno.env.get("API_TOKEN") || "token-string-ABYZ000"
@@ -73,7 +77,7 @@ async function delProjectVar() {
     
 }
 
-async function addProjectVar() {
+async function addProjectVar(key:string, masked: boolean, value: string, type:string) {
     /*
     const body=new FormData();
     body.set('a', 'b');
@@ -81,7 +85,22 @@ async function addProjectVar() {
     */
 }
 
+type DotGLCLI = {
+    env_files?: string[]
+    variables?: Array<{
+        variable_type?: "env_var" | "file" | "dotglci_manual"
+        masked?: boolean
+        key: string
+        value?: string
+        path?: string
+    }>
+}
+
 async function main() {
+    logx("Loading yaml file")
+    const text = await Deno.readTextFile("/workspace/.dotglci.yml");
+    const ymlData = parse(text) as DotGLCLI;
+
     logx("Metadata:")
     jsonPrint(await _getTxt(_url(KNOWN_API.metadata)))
 
@@ -95,6 +114,27 @@ async function main() {
     logx(`Found these proj variables:`)
     console.log(proj_vars)
 
+    const tempMergedEnv = "/tmp/allenv.env";
+    
+    if (ymlData.env_files) {
+        for (let i = 0; i < ymlData.env_files.length; i++) {
+            const file = ymlData.env_files[i];
+            logx("Loading env file from: " + file )
+            await Deno.writeTextFile(
+                tempMergedEnv,
+                (await Deno.readTextFile(file)) + "\n",
+                {append: true}
+            );
+        }
+    }
+
+    let allEnvObj = await dotenv.load({
+        export: false, // store only in the result
+        envPath: tempMergedEnv,
+        allowEmptyValues: true
+    })
+
+    
 
 }
 
