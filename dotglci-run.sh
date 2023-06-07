@@ -41,7 +41,7 @@ logx "Update variables for project..."
             --allow-net=dotgitlabci \
             --allow-read=/workspace,/tmp \
             --allow-write=/workspace/.dotglci,/tmp \
-            /workspace/update-gl-vars.deno.ts
+            /workspace/deno-scripts/1.update-gl-vars.ts
 
 
 logx "Updating remote for project \"$DOTGLCI_PROJ_NAME\"..."
