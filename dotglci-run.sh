@@ -13,7 +13,7 @@ DOTGLCI_PROJ_NAME=$(basename $(git rev-parse --show-toplevel) | sed -e "s/[^0-9a
 logx "Check gitlab docker healthy"...
 
     docker-compose run --rm curlhelper curl \
-        --head -X GET http://dotgitlabci:80
+        --head --fail -X GET http://dotgitlabci:80
 
 logx "Create project skeleton (will be taken after first run)..."
 
@@ -53,6 +53,6 @@ logx "Updating remote for project \"$DOTGLCI_PROJ_NAME\"..."
 #
 #    git push local-gitlab-ci
 
-#logx "Manual pipeline run if dotglci_manual variable exist:"
+#logx "(Watch/Run Manual) pipeline:"
 #
 #

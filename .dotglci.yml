@@ -6,12 +6,17 @@ env_files:
 
 # variable_type:
 #     env_var (default) | file | dotglci_manual
+#         "dotglci_manual" will put it in pipeline variable, simulating manual run
 
 # masked (default: false)
 #     only if "env_var", see other limitations:
 #     https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable
 
-# dotglci_manual will put it in pipeline variable, simulating manual run
+# env is the "environment_scope" of variable in the cicd (default, * = all)
+
+# expanded: default true, (not "raw")
+
+# protected
 
 variables:
   - key: EXAMPLE_SET_VALUE
@@ -20,7 +25,7 @@ variables:
     value: |
       Multi line
       YAML
-      Example
+      Example1
 
   - key: VAR_X
     masked: false
@@ -28,6 +33,7 @@ variables:
 
   - key: VAR_Y
     masked: true
+    protected: true
     variable_type: env_var
 
   - key: VAR_Z
@@ -39,3 +45,8 @@ variables:
   - key: MY_FILE
     variable_type: file
     path: ".gitignore"
+
+  - key: ENV_1
+    variable_type: env_var
+    value: env1_value
+    env: env1
