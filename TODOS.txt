@@ -1,0 +1,39 @@
+
+## TODO
+
+move all deno stuff to node-api/deno-*.ts + node-api/export.ts so updating api will be easier Later
+    do all async to avoid other stuff?
+
+seperate "load var" to basic,project so we can use it also for manual vars (get from path, from .env etc)
+
+bring zod, so we can validate yaml? and export json schema? are they supported in deno?
+    yaml start to get heavy!
+    do it with json-schema after manual export ts to json schema?
+
+gitlab features:
+    custom ci path gitlap update
+    secure files add/remove?
+
+run manual pipeline(s):
+    //https://docs.gitlab.com/ee/api/pipelines.html#create-a-new-pipeline
+    variables (move manual here)
+    ref to use
+
+wait for job(s)
+    //https://docs.gitlab.com/ee/api/pipelines.html#get-the-latest-pipeline
+    wait for latest + each of manual run
+    verify all env are seen (also filter[env])
+
+download artifacts/logs from all watched runs
+
+wont do:
+    pass all host env to runner docker
+        too risky, like aws creds in env and much much more (privacy stuff also like 'host')
+    custom event source such as: web interface, merge request etc... 
+        it's just another variables, use manual variable to decide jobs condition like if (X=merge or mock=merge) then...
+    pipeline triggers
+        same as custom event source, mock it yourself, or use manual pipelines (they both can pass only ref+vars)
+    terraform
+        https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs
+        not justified as we still need to run, watch, download through API calls
+        also not looking like any pipeline resources ...

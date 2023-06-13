@@ -1,3 +1,6 @@
+# If not empty, set custom path for the ".gitlab-ci.yml"
+ci_yaml_path: ".gitlab-ci.yml"
+
 # Env files to populate vars (if no value set) in workspace
 # Later declarations will replace first etc.
 env_files:
@@ -5,8 +8,7 @@ env_files:
   - .env.dev
 
 # variable_type:
-#     env_var (default) | file | dotglci_manual
-#         "dotglci_manual" will put it in pipeline variable, simulating manual run
+#     env_var (default) | file
 
 # masked (default: false)
 #     only if "env_var", see other limitations:
@@ -49,4 +51,23 @@ variables:
   - key: ENV_1
     variable_type: env_var
     value: env1_value
-    env: env1
+    env_scope: env1
+
+# Secure files
+# max 100 files, max 5 mb
+# https://docs.gitlab.com/ee/api/secure_files.html
+
+#secure_files:
+#  - name:
+#    path:
+
+# Manual pipelines to wait for on run
+# `manual_vars` have value path or from envfile but not protected, expended, mask, gitlab_proj_env
+# If null/empty, will wait for latest pipeline after push
+#     If no runs, or latest is done, will exit (because we assume no pipeline is configured in .gitlab-ci.yml)
+
+manual_pipelines:
+  - git_ref: master
+    manual_vars:
+      - key: name
+        variable_type: file | env_var (default)

@@ -16,7 +16,7 @@ import {
 } from "./common/gitlabapi"
 
 import {
-    readConfig,  DotGLCLIVar
+    readConfig,  DotGLCLIVarProject
 } from "./common/config-file"
 
 type ss_var_info = {
@@ -34,7 +34,7 @@ async function getProjectVariables(id: number) : Promise<Array<ss_var_info>> {
 }
 
 
-async function addProjectVar(var_info: DotGLCLIVar, projID: number) {
+async function addProjectVar(var_info: DotGLCLIVarProject, projID: number) {
     //https://docs.gitlab.com/ee/api/project_level_variables.html#create-a-variable
 
     const body=new FormData();
@@ -66,8 +66,8 @@ async function addProjectVar(var_info: DotGLCLIVar, projID: number) {
         body.set("masked", String(var_info.masked))
     }
 
-    if (var_info.env !== undefined) {
-        body.set("environment_scope", String(var_info.env))
+    if (var_info.env_scope !== undefined) {
+        body.set("environment_scope", String(var_info.env_scope))
     }
 
     let x = await _postTxt(
@@ -137,10 +137,8 @@ async function main() {
         let _vars = configLoadResult.config.variables
         if (_vars) {
             for (let i = 0; i < _vars.length; i++) {
-                if (_vars[i].variable_type !== "dotglci_manual") {
-                    logx("Adding " + _vars[i].key + "...");
-                    await addProjectVar(_vars[i], projectID);
-                }
+                logx("Adding " + _vars[i].key + "...");
+                await addProjectVar(_vars[i], projectID);
             }
         }
 
