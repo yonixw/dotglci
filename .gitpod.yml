@@ -1,6 +1,9 @@
 tasks:
   - name: install-deno
-    command: bash ./0deno-gitpod-install.sh
+    command: |
+      export DENO_INSTALL="/home/gitpod/.deno" 
+      export PATH="$DENO_INSTALL/bin:$PATH" 
+      bash ./0deno-gitpod-install.sh
   - name: docker-status
     command: docker-compose ps
 
