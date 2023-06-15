@@ -2,7 +2,10 @@ export {__md5hash as md5hash} from "./deno-crypto.ts"
 
 export {parseYAML,stringifYAML} from "./deps.ts"
 
-export {__env as getENV} from "./deno-env.ts"
+export {
+    __env as getENV,
+    __argv as getARGV,
+} from "./deno-env.ts"
 
 export {
     __loadEnvObject as loadEnvObject,

@@ -29,6 +29,10 @@ wait for job(s)
 
 download artifacts/logs from all watched runs
 
+windows script to run the dockers
+    dind (double start slash): 
+        https://tomgregory.com/running-docker-in-docker-on-windows/
+
 wont do:
     pass all host env to runner docker
         too risky, like aws creds in env and much much more (privacy stuff also like 'host')
