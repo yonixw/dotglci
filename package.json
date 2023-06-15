@@ -1,0 +1,10 @@
+{
+  "name": "dotglci",
+  "version": "1.0.0",
+  "description": "Run gitlab CI pipelines using its official dockers locally",
+  "main": "index.js",
+  "repository": "https://github.com/yonixw/dotglci.git",
+  "author": "Yoni Water Man <yonixw@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
