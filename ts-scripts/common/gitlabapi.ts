@@ -1,4 +1,4 @@
-import {PROJ_URL} from "./utils.ts"
+import {PROJ_URL} from "./env.ts"
 import {_getTxt,_url,KNOWN_API} from "./fetch.ts"
 
 export async function getProjectID() : Promise<number> {

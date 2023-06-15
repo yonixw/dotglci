@@ -1,4 +1,4 @@
-import {API_TOKEN, API_URL, logx} from "./utils.ts"
+import {API_TOKEN, API_URL, logx} from "./env.ts"
 
 
 export const KNOWN_API = {
