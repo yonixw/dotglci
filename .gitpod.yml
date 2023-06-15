@@ -1,0 +1,15 @@
+tasks:
+  - name: install-deno
+    command: bash ./0deno-gitpod-install.sh
+  - name: docker-status
+    command: docker-compose ps
+
+ports:
+  - name: Gitlab
+    port: 15080
+    onOpen: ignore
+    visibility: private
+
+vscode:
+  extensions:
+    - denoland.vscode-deno
