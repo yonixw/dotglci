@@ -1,6 +1,6 @@
 tasks:
   - name: install-deno
-    command: |
+    init: |
       export DENO_INSTALL="/home/gitpod/.deno" 
       export PATH="$DENO_INSTALL/bin:$PATH" 
       bash ./0deno-gitpod-install.sh
