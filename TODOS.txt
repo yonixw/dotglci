@@ -1,6 +1,12 @@
 
 ## TODO
 
+See if deno pckg https://www.npmjs.com/package/@gitbeaker/rest
+    has runners new way
+
+all deno dependencies in deps.ts and then deno cache deps.ts
+    --volume deno-settings:/deno-dir/ 
+
 move all deno stuff to node-api/deno-*.ts + node-api/export.ts so updating api will be easier Later
     do all async to avoid other stuff?
 
