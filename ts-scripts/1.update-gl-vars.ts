@@ -1,7 +1,7 @@
 import {
  PROJ_URL,
  logx, jsonPrint,
-} from "./common/utils.ts"
+} from "./common/env.ts"
 
 import {
     _fetchTxt, _getTxt, _postTxt, _delTxt, 
@@ -16,6 +16,8 @@ import {
 import {
     readConfig,  DotGLCLIVarProject
 } from "./common/config-file.ts"
+
+import { readFile } from "./api/export.ts";
 
 type ss_var_info = {
     key:string, masked?: boolean, variable_type: string, environment_scope?: string
@@ -46,7 +48,7 @@ async function addProjectVar(var_info: DotGLCLIVarProject, projID: number) {
     }
 
     if (var_info.path) {
-        body.set("value", await Deno.readTextFile(var_info.path))
+        body.set("value", await readFile(var_info.path))
     }
     else {
         body.set("value", var_info.value || "")

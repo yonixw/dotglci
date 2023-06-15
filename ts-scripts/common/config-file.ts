@@ -1,17 +1,11 @@
-declare const Deno : any;
-
-import { parse as parseYAML, stringify as stringifYAML } from "https://deno.land/std@0.190.0/yaml/mod.ts";
-import * as dotenv from "https://deno.land/std@0.190.0/dotenv/mod.ts";
-import { Md5 } from "https://deno.land/std@0.160.0/hash/md5.ts";
-
-import {DOTGL_CLI_PATH, logx} from "./utils.ts"
+import { loadEnvObject, md5hash, parseYAML, readFile, writeFile } from "../api/export.ts"
+import {DOTGL_CLI_PATH, logx} from "./env.ts"
 
 
 export type DotGLCLIVarCommon = {
     // Common for both maunal and project level variables
     key: string
     variable_type?: "env_var" | "file"
-
     value?: string
     path?: string
 }
@@ -49,15 +43,15 @@ async function getAllDotEnv(ymlData: DotGLCLI) {
         for (let i = 0; i < ymlData.env_files.length; i++) {
             const file = ymlData.env_files[i];
             logx("Loading env file from: " + file);
-            await Deno.writeTextFile(
+            await writeFile(
                 tempMergedEnv,
-                (await Deno.readTextFile(file)) + "\n",
+                (await readFile(file)) + "\n",
                 { append: true }
             );
         }
     }
 
-    return await dotenv.load({
+    return await loadEnvObject ({
         export: false,
         envPath: tempMergedEnv,
         allowEmptyValues: true
@@ -84,8 +78,8 @@ async function updateConfigWithENV(configData: DotGLCLI) {
 }
 
 export async function readConfig() {
-    const text = await Deno.readTextFile(DOTGL_CLI_PATH);
-    const config_version_md5 = (new Md5()).update(text).toString("hex")
+    const text = await readFile(DOTGL_CLI_PATH);
+    const config_version_md5 = md5hash(text);
     let configData = parseYAML(text) as DotGLCLI;
 
     configData = await updateConfigWithENV(configData);
