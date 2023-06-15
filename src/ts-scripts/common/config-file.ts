@@ -1,4 +1,4 @@
-import { loadEnvObject, md5hash, parseYAML, readFile, writeFile } from "../api/export.ts"
+import { loadEnvObject, md5hash, parseYAML, readFile, writeFile, z } from "../api/export.ts"
 import {DOTGL_CLI_PATH, logx} from "./env.ts"
 
 
@@ -35,6 +35,7 @@ export type DotGLCLI = {
     secure_files?: Array<DotGLCLISecureFile>
     manual_pipelines?: Array<DotGLCLIManualPipeline>
 }
+
 
 async function getAllDotEnv(ymlData: DotGLCLI) {
     const tempMergedEnv = "/tmp/allenv.env";

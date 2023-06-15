@@ -13,6 +13,7 @@ logx () {
 
 logx "DOTGLCI Dir: $SCRIPT_DIR"
 logx "Your git dir: $GIT_TOP_DIR"
+logx "Your git proj in dotglci: $DOTGLCI_PROJ_NAME"
 
 logx "Building the script base docker ..."
     (docker images | grep dotglci_scriptbase) || \
@@ -22,6 +23,7 @@ logx "Running CLI inside docker (with docker in docker) ..."
 
     docker run --rm -it \
         -v '/var/run/docker.sock:/var/run/docker.sock' \
+        -v "$SCRIPT_DIR/data/deno-settings:/deno-dir/" \
         -v "$SCRIPT_DIR:/app" \
         dotglci_scriptbase run \
             --allow-read \

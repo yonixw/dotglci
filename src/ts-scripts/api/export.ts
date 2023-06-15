@@ -12,3 +12,5 @@ export {
     __readFromFile as readFile,
     __writeToFile as writeFile
 } from "./deno-files.ts"
+
+export {__z as z} from "./deps.ts"
