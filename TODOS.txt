@@ -1,17 +1,26 @@
 
 ## TODO
 
-See if deno pckg https://www.npmjs.com/package/@gitbeaker/rest
-    has runners new way
+cli validate options deno
+    https://cliffy.io/docs@v0.25.7/command
+        https://www.npmjs.com/package/command-line-usage
+        https://www.npmjs.com/package/command-line-args
+        https://www.npmjs.com/package/commander#typescript
+        https://examples.deno.land/command-line-arguments
 
-all deno dependencies in deps.ts and then deno cache deps.ts
-    --volume deno-settings:/deno-dir/ 
-
-seperate "load var" to basic,project so we can use it also for manual vars (get from path, from .env etc)
+convert bash scripts to deno
+    https://www.npmjs.com/package/docker-compose
+    https://www.npmjs.com/package/dockerode ??
 
 bring zod, so we can validate yaml? and export json schema? are they supported in deno?
     yaml start to get heavy!
-    do it with json-schema after manual export ts to json schema?
+    export schema task
+    ?? do it with json-schema after manual export ts to json schema?
+
+See if deno pckg https://www.npmjs.com/package/@gitbeaker/rest
+    has runners new way
+
+seperate "load var" to basic,project so we can use it also for manual vars (get from path, from .env etc)
 
 gitlab features:
     custom ci path gitlap update
