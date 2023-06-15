@@ -1,6 +1,4 @@
-declare const Deno : any;
-
-import {API_TOKEN, API_URL, logx} from "./utils"
+import {API_TOKEN, API_URL, logx} from "./utils.ts"
 
 
 export const KNOWN_API = {
@@ -22,7 +20,7 @@ export const _url = (apiSuffix: string, params: {[key:string]:any} ={})=> {
 }
 
 
-export async function _fetchTxt(url, method="GET", headers?:Record<string,any>, body?:any) : Promise< string | false> {
+export async function _fetchTxt(url:string, method="GET", headers?:Record<string,any>, body?:any) : Promise< string | false> {
     try {
         logx(url,method)
         let r = await fetch(url,{method, headers, body});
@@ -34,17 +32,17 @@ export async function _fetchTxt(url, method="GET", headers?:Record<string,any>, 
     }
 }
 
-export function  _getTxt(url, headers?:Record<string,any>, body?:any) : Promise< string | false> {
+export function  _getTxt(url:string, headers?:Record<string,any>, body?:any) : Promise< string | false> {
     headers = {...(headers || {}), "Authorization" : "Bearer " + API_TOKEN }
     return _fetchTxt(url, "GET", headers, body)
 }
 
-export function  _postTxt(url, headers?:Record<string,any>, body?:any) : Promise< string | false> {
+export function  _postTxt(url:string, headers?:Record<string,any>, body?:any) : Promise< string | false> {
     headers = {...(headers || {}), "Authorization" : "Bearer " + API_TOKEN }
     return _fetchTxt(url, "POST", headers, body)
 }
 
-export function  _delTxt(url, headers?:Record<string,any>, body?:any) : Promise< string | false> {
+export function  _delTxt(url:string, headers?:Record<string,any>, body?:any) : Promise< string | false> {
     headers = {...(headers || {}), "Authorization" : "Bearer " + API_TOKEN }
     return _fetchTxt(url, "DELETE", headers, body)
 }

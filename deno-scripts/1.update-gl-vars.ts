@@ -1,23 +1,21 @@
-declare const Deno : any;
-
 import {
  PROJ_URL,
  logx, jsonPrint,
-} from "./common/utils"
+} from "./common/utils.ts"
 
 import {
     _fetchTxt, _getTxt, _postTxt, _delTxt, 
     _url,
     KNOWN_API
-} from "./common/fetch"
+} from "./common/fetch.ts"
 
 import {
     getProjectID
-} from "./common/gitlabapi"
+} from "./common/gitlabapi.ts"
 
 import {
     readConfig,  DotGLCLIVarProject
-} from "./common/config-file"
+} from "./common/config-file.ts"
 
 type ss_var_info = {
     key:string, masked?: boolean, variable_type: string, environment_scope?: string
@@ -25,7 +23,7 @@ type ss_var_info = {
 
 async function getProjectVariables(id: number) : Promise<Array<ss_var_info>> {
     const all_projs_vars = JSON.parse( await _getTxt(_url(KNOWN_API.proj_vars,{id})) || "" );
-    return all_projs_vars.map(e=>({
+    return all_projs_vars.map((e:any)=>({
         key:e.key,
         masked:e.masked=="true",
         variable_type:e.variable_type,

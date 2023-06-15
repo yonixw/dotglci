@@ -1,5 +1,3 @@
-declare const Deno : any;
-
 
 // API version (v4) can be found in the /admin page
 export const API_URL = Deno.env.get("API_URL") || "http://dotgitlabci:80/api/v4" 
